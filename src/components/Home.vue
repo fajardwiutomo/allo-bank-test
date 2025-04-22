@@ -15,6 +15,7 @@
         class="input-inner"
       />
       <button @click="goToAddRocket" class="button">Add Rocket</button>
+      <button @click="handleRetry" class="button-retry">Retry</button>
     </div>
 
     <!-- <router-link
@@ -78,6 +79,10 @@ function goToAddRocket() {
   router.push("/AddRocket");
 }
 
+function handleRetry() {
+  rocketStore.fetchRockets()
+}
+
 onMounted(() => {
   if (rocketStore.rockets.length === 0) {
     rocketStore.fetchRockets();
@@ -123,8 +128,16 @@ onMounted(() => {
   margin-left: 15px;
 }
 
+.button-retry {
+  background: red;
+  padding: 10px;
+  border-radius: 5px;
+  color: white;
+  margin-left: 15px;
+}
+
 .input-inner {
-  background-color: #DCDCDC;
+  background-color: #dcdcdc;
   border: rgb(179, 174, 174) solid 1px;
   border-radius: 5px;
   padding: 10px;

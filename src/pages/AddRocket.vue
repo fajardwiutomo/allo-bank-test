@@ -9,28 +9,24 @@
 
       <div class="input-container">
         <label class="block text-gray-700 font-medium mb-2">Rocket Name</label>
-        <input v-model="form.name" type="text" required class="input-inner" />
-        <p v-if="errors.name" class="text-red-600 text-sm mt-1">
+        <input v-model="form.name" type="text" class="input-inner" />
+        <p v-if="errors.name" class="text-red text-sm mt-1">
           {{ errors.name }}
         </p>
       </div>
 
       <div class="input-container">
         <label class="block text-gray-700 font-medium mb-2">Description</label>
-        <textarea
-          v-model="form.description"
-          required
-          class="input-inner"
-        ></textarea>
-        <p v-if="errors.name" class="text-red-600 text-sm mt-1">
+        <textarea v-model="form.description" class="input-inner"></textarea>
+        <p v-if="errors.description" class="text-red text-sm mt-1">
           {{ errors.description }}
         </p>
       </div>
 
       <div class="input-container">
         <label class="block text-gray-700 font-medium mb-2">Image URL</label>
-        <input v-model="form.image" type="url" required class="input-inner" />
-        <p v-if="errors.name" class="text-red-600 text-sm mt-1">
+        <input v-model="form.image" type="url" class="input-inner" />
+        <p v-if="errors.image" class="text-red text-sm mt-1">
           {{ errors.image }}
         </p>
       </div>
@@ -42,36 +38,20 @@
         <input
           v-model.number="form.costPerLaunch"
           type="number"
-          required
           class="input-inner"
         />
-        <p v-if="errors.name" class="text-red-600 text-sm mt-1">
-          {{ errors.costPerLaunch  }}
+        <p v-if="errors.costPerLaunch" class="text-red text-sm mt-1">
+          {{ errors.costPerLaunch }}
         </p>
       </div>
 
       <div class="input-container">
         <label class="block text-gray-700 font-medium mb-2">Country</label>
-        <input
-          v-model="form.country"
-          type="text"
-          required
-          class="input-inner"
-        />
-        <p v-if="errors.name" class="text-red-600 text-sm mt-1">
-          {{ errors.country  }}
+        <input v-model="form.country" type="text" class="input-inner" />
+        <p v-if="errors.country" class="text-red text-sm mt-1">
+          {{ errors.country }}
         </p>
       </div>
-
-      <!-- <div class="input-container">
-        <label class="block text-gray-700 font-medium mb-2">First Flight</label>
-        <input
-          v-model="form.firstFlight"
-          type="date"
-          required
-          class="input-inner"
-        />
-      </div> -->
 
       <div class="input-container">
         <label class="block text-gray-700 font-medium mb-2">First Flight</label>
@@ -80,12 +60,11 @@
             ref="dateInput"
             v-model="form.firstFlight"
             type="date"
-            required
             class="date-component"
           />
         </div>
-        <p v-if="errors.name" class="text-red-600 text-sm mt-1">
-          {{ errors.firstFlight  }}
+        <p v-if="errors.firstFlight" class="text-red text-sm mt-1">
+          {{ errors.firstFlight }}
         </p>
       </div>
 
@@ -94,6 +73,14 @@
         <span v-else>Save Rocket</span>
       </button>
     </form>
+    <transition name="fade">
+      <div
+        v-if="showSuccess"
+        class="fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded shadow"
+      >
+        🚀 Rocket added successfully!
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -103,10 +90,14 @@ import { useRouter } from "vue-router";
 import { useRocketStore } from "@/stores/rocketStore";
 import { v4 as uuidv4 } from "uuid";
 import { ref } from "vue";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 const rocketStore = useRocketStore();
 const router = useRouter();
 const errors = reactive<Record<string, string>>({});
+const showSuccess = ref(false);
 
 const dateInput = ref<HTMLInputElement | null>(null);
 
@@ -130,7 +121,11 @@ function handleSubmit() {
     id: uuidv4(),
     ...form,
   });
-  router.push("/");
+
+  setTimeout(() => {
+    toast.success("🚀 Rocket added successfully!");
+    router.push("/");
+  }, 2000); // Pop up muncul selama 2 detik sebelum redirect
 }
 
 function validateForm() {
@@ -142,7 +137,6 @@ function validateForm() {
   errors.country = form.country ? "" : "Country is required";
   errors.firstFlight = form.firstFlight ? "" : "First Flight is required";
 
-  // return true jika semua error kosong
   return Object.values(errors).every((err) => err === "");
 }
 </script>
@@ -192,5 +186,14 @@ function validateForm() {
   outline: none;
   width: 100%;
   color: black;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

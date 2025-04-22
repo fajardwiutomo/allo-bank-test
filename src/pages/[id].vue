@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col items-center bg-white py-10 px-4">
+  <div class="min-h-screen flex flex-col items-center bg-white py-10 px-4 ">
     <div v-if="rocketStore.loading" class="text-gray-500 text-center">
       Loading rocket details...
     </div>

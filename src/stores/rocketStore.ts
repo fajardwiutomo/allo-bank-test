@@ -51,12 +51,12 @@ export const useRocketStore = defineStore('rocket', {
             return this.rockets.find((rocket) => rocket.id === id)
         },
         async addRocket(newRocket: Rocket) {
-            this.loading = true
+            this.isLoading = true
             try {
-                await fetch('/your-api', { method: 'POST', body: JSON.stringify(newRocket) })
+                await fetch('/my-api', { method: 'POST', body: JSON.stringify(newRocket) })
                 this.rockets.unshift(newRocket)
             } finally {
-                this.loading = false
+                this.isLoading = false
             }
         }
     },
